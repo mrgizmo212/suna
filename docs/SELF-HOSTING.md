@@ -95,6 +95,7 @@ The wizard will:
 - Configure environment files
 - Install dependencies
 - Start Suna using your preferred method
+- Wait for Docker services to become healthy before setup completes
 
 ### 3. Supabase Configuration
 

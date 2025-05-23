@@ -654,6 +654,44 @@ def install_dependencies():
         print_info("You may need to install them manually.")
         return False
 
+def wait_for_services(timeout=120, interval=5):
+    """Wait for Docker services to report healthy or running state."""
+    print_info("Waiting for services to become ready...")
+    start = time.time()
+    required_running = ["backend", "frontend", "worker"]
+    required_healthy = ["redis", "rabbitmq"]
+
+    while time.time() - start < timeout:
+        try:
+            result = subprocess.run(
+                ["docker", "compose", "ps"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=True,
+            )
+            output = result.stdout
+        except subprocess.SubprocessError:
+            output = ""
+
+        running_ok = all(
+            re.search(rf"{svc}.*(Up|running)", output)
+            for svc in required_running
+        )
+        healthy_ok = all(
+            re.search(rf"{svc}.*healthy", output)
+            for svc in required_healthy
+        )
+
+        if running_ok and healthy_ok:
+            return True
+
+        elapsed = int(time.time() - start)
+        print_info(f"  {elapsed}s elapsed. Still waiting...")
+        time.sleep(interval)
+
+    return False
+
 def start_suna():
     """Start Suna using Docker Compose or manual startup"""
     print_info("You can start Suna using either Docker Compose or by manually starting the frontend, backend and worker.")
@@ -718,22 +756,12 @@ def start_suna():
             subprocess.run(['docker', 'compose', 'up', '-d'], check=True)
 
             # Wait for services to be ready
-            print_info("Waiting for services to start...")
-            time.sleep(10)  # Give services some time to start
-            
-            # Check if services are running
-            result = subprocess.run(
-                ['docker', 'compose', 'ps'],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=True,
-                text=True
-            )
-            
-            if "backend" in result.stdout and "frontend" in result.stdout:
+            if wait_for_services():
                 print_success("Suna services are up and running!")
             else:
-                print_warning("Some services might not be running correctly. Check 'docker compose ps' for details.")
+                print_warning(
+                    "Timeout waiting for services. Check 'docker compose ps' for details."
+                )
             
         except subprocess.SubprocessError as e:
             print_error(f"Failed to start Suna: {e}")

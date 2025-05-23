@@ -1,5 +1,7 @@
 import traceback
 import json
+import base64
+import shlex
 
 from agentpress.tool import ToolResult, openapi_schema, xml_schema
 from agentpress.thread_manager import ThreadManager
@@ -30,23 +32,35 @@ class SandboxBrowserTool(SandboxToolsBase):
             # Ensure sandbox is initialized
             await self._ensure_sandbox()
             
-            # Build the curl command
+            # Build the python command using requests inside the sandbox
             url = f"http://localhost:8003/api/automation/{endpoint}"
-            
-            if method == "GET" and params:
-                query_params = "&".join([f"{k}={v}" for k, v in params.items()])
-                url = f"{url}?{query_params}"
-                curl_cmd = f"curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
-            else:
-                curl_cmd = f"curl -s -X {method} '{url}' -H 'Content-Type: application/json'"
-                if params:
-                    json_data = json.dumps(params)
-                    curl_cmd += f" -d '{json_data}'"
-            
-            logger.debug("\033[95mExecuting curl command:\033[0m")
-            logger.debug(f"{curl_cmd}")
-            
-            response = self.sandbox.process.exec(curl_cmd, timeout=30)
+
+            params = params or {}
+            params_json = json.dumps(params)
+            params_b64 = base64.b64encode(params_json.encode()).decode()
+
+            python_script = """
+import os, json, base64, requests
+url = os.environ['URL']
+method = os.environ['METHOD']
+params = json.loads(base64.b64decode(os.environ['PARAMS_B64']).decode()) if os.environ.get('PARAMS_B64') else {}
+if method.upper() == 'GET':
+    res = requests.get(url, params=params)
+else:
+    res = requests.request(method.upper(), url, json=params)
+print(res.text)
+"""
+
+            exec_cmd = (
+                f"URL={shlex.quote(url)} METHOD={shlex.quote(method)} "
+                f"PARAMS_B64={shlex.quote(params_b64)} "
+                "python3 - <<'PY'\n" + python_script + "\nPY"
+            )
+
+            logger.debug("\033[95mExecuting sandbox HTTP command:\033[0m")
+            logger.debug(exec_cmd)
+
+            response = self.sandbox.process.exec(exec_cmd, timeout=30)
             
             if response.exit_code == 0:
                 try:

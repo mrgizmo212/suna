@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 from services.supabase import DBConnection
-from sandbox.sandbox import daytona
+from sandbox.provider import provider
 from utils.logger import logger
 
 
@@ -82,9 +82,9 @@ async def delete_sandboxes(projects: List[Dict[str, Any]]) -> None:
         try:
             logger.info(f"Deleting sandbox {sandbox_id} for project '{project_name}' (ID: {project_id})")
             
-            # Get the sandbox and delete it
-            sandbox = daytona.get_current_sandbox(sandbox_id)
-            daytona.delete(sandbox)
+            # Get the sandbox from the provider and delete it
+            sandbox = provider.get_current_sandbox(sandbox_id)
+            provider.delete(sandbox)
             
             logger.info(f"Successfully deleted sandbox {sandbox_id}")
         except Exception as e:
@@ -102,7 +102,9 @@ async def main():
     
     # Print environment info
     print(f"Environment Mode: {os.getenv('ENV_MODE', 'Not set')}")
-    print(f"Daytona Server: {os.getenv('DAYTONA_SERVER_URL', 'Not set')}")
+    print(
+        f"Sandbox Provider: {os.getenv('DAYTONA_SERVER_URL', 'Not set')}"
+    )
     
     try:
         # Query projects with sandboxes

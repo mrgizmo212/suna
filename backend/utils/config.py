@@ -161,6 +161,12 @@ class Configuration:
     # Sandbox configuration
     SANDBOX_IMAGE_NAME = "kortix/suna:0.1.2.8"
     SANDBOX_ENTRYPOINT = "/usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf"
+    SANDBOX_PROVIDER: str = "daytona"  # daytona|e2b|codesandbox
+
+    # LangFuse configuration
+    LANGFUSE_PUBLIC_KEY: Optional[str] = None
+    LANGFUSE_SECRET_KEY: Optional[str] = None
+    LANGFUSE_HOST: str = "https://cloud.langfuse.com"
 
     @property
     def STRIPE_PRODUCT_ID(self) -> str:
