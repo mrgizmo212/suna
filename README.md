@@ -86,7 +86,7 @@ The setup process includes:
 
 - Setting up a Supabase project for database and authentication
 - Configuring Redis for caching and session management
-- Setting up Daytona for secure agent execution
+- Setting up a sandbox provider for secure agent execution
 - Integrating with LLM providers (Anthropic, OpenAI, Groq, etc.)
 - Configuring web search and scraping capabilities
 
@@ -116,6 +116,7 @@ python start.py
 See the [Self-Hosting Guide](./docs/SELF-HOSTING.md) for detailed manual setup instructions.
 
 The wizard will guide you through all necessary steps to get your Suna instance up and running. For detailed instructions, troubleshooting tips, and advanced configuration options, see the [Self-Hosting Guide](./SELF-HOSTING.md).
+For an overview of the codebase structure and sandbox integration points, see the [Developer Guide](./docs/DEVELOPER_GUIDE.md).
 
 ## Contributing
 
@@ -131,7 +132,7 @@ We welcome contributions from the community! Please see our [Contributing Guide]
 
 ### Technologies
 
-- [Daytona](https://daytona.io/) - Secure agent execution environment
+- Provider-agnostic sandbox environment (defaults to Daytona)
 - [Supabase](https://supabase.com/) - Database and authentication
 - [Playwright](https://playwright.dev/) - Browser automation
 - [OpenAI](https://openai.com/) - LLM provider

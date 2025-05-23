@@ -53,7 +53,7 @@ Obtain the following API keys:
   - [Firecrawl](https://firecrawl.dev/) - For web scraping capabilities
 
 - **Agent Execution**:
-  - [Daytona](https://app.daytona.io/) - For secure agent execution
+  - Self-hosted sandbox provider (Daytona by default, can use e2b or CodeSandbox)
 
 #### Optional
 
@@ -108,13 +108,12 @@ During setup, you'll need to:
    - Navigate to Project Settings → API
    - Add 'basejump' to the Exposed Schema section
 
-### 4. Daytona Configuration
+### 4. Sandbox Provider Configuration
 
-As part of the setup, you'll need to:
+As part of the setup, you'll need to configure your sandbox provider. By default this project uses Daytona, but you can swap in other providers like e2b or CodeSandbox.
 
-1. Create a Daytona account
-2. Generate an API key
-3. Create a Docker image:
+1. Obtain API credentials for your chosen provider
+2. Build the sandbox Docker image if required:
    - Image name: `kortix/suna:0.1.2.8`
    - Entrypoint: `/usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf`
 
@@ -255,8 +254,8 @@ poetry run python3.11 -m dramatiq run_agent_background
    - Verify API keys are correctly entered
    - Check for API usage limits or restrictions
 
-4. **Daytona connection issues**
-   - Verify Daytona API key
+4. **Sandbox connection issues**
+   - Verify sandbox provider API key
    - Check if the container image is correctly configured
 
 ### Logs

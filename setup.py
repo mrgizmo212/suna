@@ -210,6 +210,30 @@ def collect_daytona_info():
         'DAYTONA_TARGET': "us",
     }
 
+
+def collect_sandbox_provider_info():
+    """Collect sandbox provider credentials."""
+    provider = input("Sandbox provider [daytona/e2b/codesandbox] (default: daytona): ") or "daytona"
+    provider = provider.lower()
+    if provider == "daytona":
+        info = collect_daytona_info()
+        return {
+            'SANDBOX_PROVIDER': 'daytona',
+            'SANDBOX_API_KEY': info['DAYTONA_API_KEY'],
+            'SANDBOX_SERVER_URL': info['DAYTONA_SERVER_URL'],
+            'SANDBOX_TARGET': info['DAYTONA_TARGET'],
+        }
+    else:
+        api_key = input("Enter sandbox API key: ")
+        server_url = input("Enter sandbox server URL: ")
+        target = input("Enter sandbox target/region (optional): ")
+        return {
+            'SANDBOX_PROVIDER': provider,
+            'SANDBOX_API_KEY': api_key,
+            'SANDBOX_SERVER_URL': server_url,
+            'SANDBOX_TARGET': target,
+        }
+
 def collect_llm_api_keys():
     """Collect LLM API keys for various providers"""
     print_info("You need at least one LLM provider API key to use Suna")
@@ -501,9 +525,9 @@ ENV_MODE=local
     env_content += f"FIRECRAWL_API_KEY={firecrawl_key}\n"
     env_content += f"FIRECRAWL_URL={firecrawl_url}\n"
     
-    # Daytona section
+    # Sandbox provider section
     env_content += "\n# Sandbox container provider:\n"
-    for key, value in env_vars['daytona'].items():
+    for key, value in env_vars['sandbox'].items():
         env_content += f"{key}={value}\n"
     
     # Add next public URL at the end
@@ -824,8 +848,8 @@ def main():
     os.environ['SUPABASE_URL'] = supabase_info['SUPABASE_URL']
     current_step += 1
     
-    print_step(current_step, total_steps, "Collecting Daytona information")
-    daytona_info = collect_daytona_info()
+    print_step(current_step, total_steps, "Collecting sandbox provider information")
+    sandbox_info = collect_sandbox_provider_info()
     current_step += 1
     
     print_step(current_step, total_steps, "Collecting LLM API keys")
@@ -843,7 +867,7 @@ def main():
     # Combine all environment variables
     env_vars = {
         'supabase': supabase_info,
-        'daytona': daytona_info,
+        'sandbox': sandbox_info,
         'llm': llm_api_keys,
         'search': search_api_keys,
         'rapidapi': rapidapi_keys,

@@ -136,10 +136,16 @@ class Configuration:
     REDIS_PASSWORD: str
     REDIS_SSL: bool = True
     
-    # Daytona sandbox configuration
-    DAYTONA_API_KEY: str
-    DAYTONA_SERVER_URL: str
-    DAYTONA_TARGET: str
+    # Generic sandbox configuration
+    SANDBOX_PROVIDER: str = "daytona"
+    SANDBOX_API_KEY: Optional[str] = None
+    SANDBOX_SERVER_URL: Optional[str] = None
+    SANDBOX_TARGET: Optional[str] = None
+
+    # Legacy Daytona variables (still supported for backward compatibility)
+    DAYTONA_API_KEY: Optional[str] = None
+    DAYTONA_SERVER_URL: Optional[str] = None
+    DAYTONA_TARGET: Optional[str] = None
     
     # Search and other API keys
     TAVILY_API_KEY: str
