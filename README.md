@@ -26,6 +26,7 @@ Suna's powerful toolkit includes seamless browser automation to navigate the web
   - [Agent Docker](#agent-docker)
   - [Supabase Database](#supabase-database)
 - [Use Cases](#use-cases)
+- [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [Self-Hosting](#self-hosting)
 - [Developer Guide](#developer-guide)
 - [Acknowledgements](#acknowledgements)
