@@ -23,6 +23,19 @@ For detailed setup instructions, please refer to:
 - Use descriptive commit messages
 - Keep PRs focused on a single feature or fix
 
+## Running Tests
+
+Continuous integration runs the test suite with `pytest`. You can run the same
+tests locally before opening a pull request:
+
+```bash
+cd backend
+pytest
+```
+
+`pytest` will discover tests under `backend/tests/` using the provided
+configuration. Ensuring tests pass locally helps avoid CI failures.
+
 ## Reporting Issues
 
 When reporting issues, please include:
