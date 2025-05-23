@@ -7,30 +7,30 @@ from utils.config import Configuration
 
 load_dotenv()
 
-logger.debug("Initializing Daytona sandbox configuration")
+logger.debug("Initializing sandbox configuration")
 daytona_config = DaytonaConfig(
-    api_key=config.DAYTONA_API_KEY,
-    server_url=config.DAYTONA_SERVER_URL,
-    target=config.DAYTONA_TARGET
+    api_key=config.SANDBOX_API_KEY,
+    server_url=config.SANDBOX_SERVER_URL,
+    target=config.SANDBOX_TARGET
 )
 
 if daytona_config.api_key:
-    logger.debug("Daytona API key configured successfully")
+    logger.debug("Sandbox API key configured successfully")
 else:
-    logger.warning("No Daytona API key found in environment variables")
+    logger.warning("No sandbox API key found in environment variables")
 
 if daytona_config.server_url:
-    logger.debug(f"Daytona server URL set to: {daytona_config.server_url}")
+    logger.debug(f"Sandbox server URL set to: {daytona_config.server_url}")
 else:
-    logger.warning("No Daytona server URL found in environment variables")
+    logger.warning("No sandbox server URL found in environment variables")
 
 if daytona_config.target:
-    logger.debug(f"Daytona target set to: {daytona_config.target}")
+    logger.debug(f"Sandbox target set to: {daytona_config.target}")
 else:
-    logger.warning("No Daytona target found in environment variables")
+    logger.warning("No sandbox target found in environment variables")
 
 daytona = Daytona(daytona_config)
-logger.debug("Daytona client initialized")
+logger.debug("Sandbox client initialized")
 
 async def get_or_start_sandbox(sandbox_id: str):
     """Retrieve a sandbox by ID, check its state, and start it if needed."""
@@ -83,7 +83,7 @@ def start_supervisord_session(sandbox: Sandbox):
 def create_sandbox(password: str, project_id: str = None):
     """Create a new sandbox with all required services configured and running."""
     
-    logger.debug("Creating new Daytona sandbox environment")
+    logger.debug("Creating new sandbox environment")
     logger.debug("Configuring sandbox with browser-use image and environment variables")
     
     labels = None

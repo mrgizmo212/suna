@@ -13,7 +13,7 @@ This script:
 Make sure your environment variables are properly set:
 - SUPABASE_URL
 - SUPABASE_SERVICE_ROLE_KEY
-- DAYTONA_SERVER_URL
+- SANDBOX_SERVER_URL (or legacy DAYTONA_SERVER_URL)
 """
 
 # TODO: SAVE THE LATEST SANDBOX STATE SOMEWHERE OR LIKE MASS CHECK THE STATE BEFORE STARTING TO ARCHIVE - AS ITS GOING TO GO OVER A BUNCH THAT ARE ALREADY ARCHIVED – MAYBE BEST TO GET ALL FROM DAYTONA AND THEN RUN THE ARCHIVE ONLY ON THE ONES THAT MEET THE CRITERIA (STOPPED STATE)
@@ -263,7 +263,9 @@ async def main():
     
     # Print environment info
     print(f"Environment Mode: {os.getenv('ENV_MODE', 'Not set')}")
-    print(f"Daytona Server: {os.getenv('DAYTONA_SERVER_URL', 'Not set')}")
+    print(
+        f"Sandbox Server: {os.getenv('SANDBOX_SERVER_URL', os.getenv('DAYTONA_SERVER_URL', 'Not set'))}"
+    )
     
     try:
         # Initialize global DB connection
