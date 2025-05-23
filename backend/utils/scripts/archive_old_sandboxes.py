@@ -30,7 +30,7 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 from services.supabase import DBConnection
-from sandbox.sandbox import daytona
+from sandbox.sandbox import provider
 from utils.logger import logger
 
 # Global DB connection to reuse
@@ -170,7 +170,8 @@ async def archive_sandbox(project: Dict[str, Any], dry_run: bool) -> bool:
             return True
         
         # Get the sandbox
-        sandbox = daytona.get_current_sandbox(sandbox_id)
+        prov = provider()
+        sandbox = prov.daytona.get_current_sandbox(sandbox_id) if hasattr(prov, 'daytona') else None
         
         # Check sandbox state - it must be stopped before archiving
         sandbox_info = sandbox.info()

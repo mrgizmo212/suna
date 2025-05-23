@@ -3,8 +3,8 @@ from typing import Optional
 
 from agentpress.thread_manager import ThreadManager
 from agentpress.tool import Tool
-from daytona_sdk import Sandbox
 from sandbox.sandbox import get_or_start_sandbox
+from sandbox.providers.base import SandboxHandle
 from utils.logger import logger
 from utils.files_utils import clean_path
 
@@ -23,7 +23,7 @@ class SandboxToolsBase(Tool):
         self._sandbox_id = None
         self._sandbox_pass = None
 
-    async def _ensure_sandbox(self) -> Sandbox:
+    async def _ensure_sandbox(self) -> SandboxHandle:
         """Ensure we have a valid sandbox instance, retrieving it from the project if needed."""
         if self._sandbox is None:
             try:
@@ -69,7 +69,7 @@ class SandboxToolsBase(Tool):
         return self._sandbox
 
     @property
-    def sandbox(self) -> Sandbox:
+    def sandbox(self) -> SandboxHandle:
         """Get the sandbox instance, ensuring it exists."""
         if self._sandbox is None:
             raise RuntimeError("Sandbox not initialized. Call _ensure_sandbox() first.")
