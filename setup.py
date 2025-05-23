@@ -186,8 +186,8 @@ def collect_supabase_info():
         'SUPABASE_SERVICE_ROLE_KEY': supabase_service_role_key,
     }
 
-def collect_daytona_info():
-    """Collect Daytona API key"""
+def collect_sandbox_info():
+    """Collect sandbox provider API key (Daytona by default)"""
     print_info("You'll need to create a Daytona account before continuing")
     print_info("Visit https://app.daytona.io/ to create one")
     print_info("Then, generate an API key from 'Keys' menu")
@@ -199,15 +199,15 @@ def collect_daytona_info():
     input("Press Enter to continue once you've completed these steps...")
     
     while True:
-        daytona_api_key = input("Enter your Daytona API key: ")
-        if validate_api_key(daytona_api_key):
+        sandbox_api_key = input("Enter your Daytona API key: ")
+        if validate_api_key(sandbox_api_key):
             break
         print_error("Invalid API key format. It should be at least 10 characters long.")
-    
+
     return {
-        'DAYTONA_API_KEY': daytona_api_key,
-        'DAYTONA_SERVER_URL': "https://app.daytona.io/api",
-        'DAYTONA_TARGET': "us",
+        'SANDBOX_API_KEY': sandbox_api_key,
+        'SANDBOX_SERVER_URL': "https://app.daytona.io/api",
+        'SANDBOX_TARGET': "us",
     }
 
 def collect_llm_api_keys():
@@ -501,9 +501,9 @@ ENV_MODE=local
     env_content += f"FIRECRAWL_API_KEY={firecrawl_key}\n"
     env_content += f"FIRECRAWL_URL={firecrawl_url}\n"
     
-    # Daytona section
+    # Sandbox provider section
     env_content += "\n# Sandbox container provider:\n"
-    for key, value in env_vars['daytona'].items():
+    for key, value in env_vars['sandbox'].items():
         env_content += f"{key}={value}\n"
     
     # Add next public URL at the end
@@ -824,8 +824,8 @@ def main():
     os.environ['SUPABASE_URL'] = supabase_info['SUPABASE_URL']
     current_step += 1
     
-    print_step(current_step, total_steps, "Collecting Daytona information")
-    daytona_info = collect_daytona_info()
+    print_step(current_step, total_steps, "Collecting sandbox provider information")
+    sandbox_info = collect_sandbox_info()
     current_step += 1
     
     print_step(current_step, total_steps, "Collecting LLM API keys")
@@ -843,7 +843,7 @@ def main():
     # Combine all environment variables
     env_vars = {
         'supabase': supabase_info,
-        'daytona': daytona_info,
+        'sandbox': sandbox_info,
         'llm': llm_api_keys,
         'search': search_api_keys,
         'rapidapi': rapidapi_keys,

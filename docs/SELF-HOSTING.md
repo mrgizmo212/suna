@@ -160,9 +160,9 @@ FIRECRAWL_API_KEY=your-firecrawl-key
 FIRECRAWL_URL=https://api.firecrawl.dev
 
 # Sandbox container provider
-DAYTONA_API_KEY=your-daytona-key
-DAYTONA_SERVER_URL=https://app.daytona.io/api
-DAYTONA_TARGET=us
+SANDBOX_API_KEY=your-daytona-key
+SANDBOX_SERVER_URL=https://app.daytona.io/api
+SANDBOX_TARGET=us
 
 NEXT_PUBLIC_URL=http://localhost:3000
 ```

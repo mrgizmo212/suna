@@ -136,10 +136,15 @@ class Configuration:
     REDIS_PASSWORD: str
     REDIS_SSL: bool = True
     
-    # Daytona sandbox configuration
-    DAYTONA_API_KEY: str
-    DAYTONA_SERVER_URL: str
-    DAYTONA_TARGET: str
+    # Sandbox container provider configuration
+    SANDBOX_API_KEY: str
+    SANDBOX_SERVER_URL: str
+    SANDBOX_TARGET: str
+
+    # Deprecated Daytona variables (for backward compatibility)
+    DAYTONA_API_KEY: Optional[str] = None
+    DAYTONA_SERVER_URL: Optional[str] = None
+    DAYTONA_TARGET: Optional[str] = None
     
     # Search and other API keys
     TAVILY_API_KEY: str
@@ -185,7 +190,10 @@ class Configuration:
         
         # Load configuration from environment variables
         self._load_from_env()
-        
+
+        # Apply backward compatibility for deprecated Daytona variables
+        self._apply_backward_compat()
+
         # Perform validation
         self._validate()
         
@@ -211,6 +219,15 @@ class Configuration:
                 else:
                     # String or other type
                     setattr(self, key, env_val)
+
+    def _apply_backward_compat(self):
+        """Apply backward compatibility for deprecated Daytona variables."""
+        if not self.SANDBOX_API_KEY and self.DAYTONA_API_KEY:
+            self.SANDBOX_API_KEY = self.DAYTONA_API_KEY
+        if not self.SANDBOX_SERVER_URL and self.DAYTONA_SERVER_URL:
+            self.SANDBOX_SERVER_URL = self.DAYTONA_SERVER_URL
+        if not self.SANDBOX_TARGET and self.DAYTONA_TARGET:
+            self.SANDBOX_TARGET = self.DAYTONA_TARGET
     
     def _validate(self):
         """Validate configuration based on type hints."""
