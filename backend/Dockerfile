@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:python3.11-alpine
 
-ENV ENV_MODE production
+# ENV_MODE is set via .env file, not hardcoded here
 WORKDIR /app
 
 RUN apk add --no-cache curl git \

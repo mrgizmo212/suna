@@ -28,7 +28,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "6381:6379"
     volumes:
       - redis_data:/data
       - ./backend/services/docker/redis.conf:/usr/local/etc/redis/redis.conf:ro
@@ -46,10 +46,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8002:8000"
     volumes:
       - ./backend/.env:/app/.env:ro
     environment:
+      - ENV_MODE=local
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
@@ -70,6 +71,7 @@ services:
     volumes:
       - ./backend/.env:/app/.env:ro
     environment:
+      - ENV_MODE=local
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
@@ -84,7 +86,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3003:3000"
     depends_on:
       - backend
 
